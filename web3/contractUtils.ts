@@ -6,7 +6,7 @@ export const getTokenInstance = (tokenAddress:string, signer: any) => {
     if (!signer) {
         // if this should happen, we will only be creating a read-only contract instance
         // and this is a provider not signer
-        signer = new ethers.providers.JsonRpcProvider("https://speedy-nodes-nyc.moralis.io/9d1f9e8f5fbf596688e88840/eth/rinkeby");
+        signer = new ethers.providers.JsonRpcProvider("https://speedy-nodes-nyc.moralis.io/9d1f9e8f5fbf596688e88840/eth/ropsten");
         
     }
     
@@ -19,7 +19,7 @@ export const getStakingPoolInstance = (StakingPoolAddress:string, signer: any) =
     if (!signer) {
         // if this should happen, we will only be creating a read-only contract instance
         // and this is a provider not signer
-        signer = new ethers.providers.JsonRpcProvider("https://speedy-nodes-nyc.moralis.io/9d1f9e8f5fbf596688e88840/eth/rinkeby");
+        signer = new ethers.providers.JsonRpcProvider("https://speedy-nodes-nyc.moralis.io/9d1f9e8f5fbf596688e88840/eth/ropsten");
     }
     const stakingPoolInstance = new ethers.Contract(StakingPoolAddress, Staking_pool_ABI, signer);
     return stakingPoolInstance;
