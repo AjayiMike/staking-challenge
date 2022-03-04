@@ -1,0 +1,33 @@
+.root {
+    background-color: #f0ece7;
+    padding: 1.5rem 1rem;
+    border-radius: .5rem;
+}
+
+.heading {
+    font-weight: 500;
+    color: #7a7979;
+    margin: 1.5rem 0;
+
+}
+
+.createBtn {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #022c2c;
+    border-radius: .5rem;
+    color: #022c2c;
+    font-weight: 500;
+    transition: all .3s;
+    cursor: pointer;
+}
+
+.createBtn:hover {
+    background-color: #022c2c;
+    color: #f0ece7;
+}
+
+.approvedClass {
+    background-color: #022c2c83;
+    color: #f0ece7;
+}

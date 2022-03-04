@@ -9,10 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.5.3",
+    "@openzeppelin/contracts": "^4.5.0",
+    "@types/react-modal": "^3.13.1",
+    "@web3-react/core": "^6.1.9",
+    "@web3-react/injected-connector": "^6.0.7",
+    "@web3-react/walletconnect-connector": "^6.2.13",
+    "clsx": "^1.1.1",
     "degen": "^0.0.69",
+    "ethers": "^5.5.4",
     "next": "12.1.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
+    "react-modal": "^3.14.4",
+    "react-toastify": "^8.2.0"
   },
   "devDependencies": {
     "@types/node": "17.0.21",

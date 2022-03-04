@@ -1,0 +1,54 @@
+.container {
+    background-color: #f0ece7;
+    padding: 1.5rem 1rem;
+    border-radius: .5rem;
+}
+
+.heading {
+    font-weight: 500;
+    color: #7a7979;
+    margin: 1.5rem 0;
+}
+
+.statsContainer {
+    width: 100%;
+    overflow-x: scroll;
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #022c2c26;
+}
+
+.statsContainer::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.statsContainer {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.heading {
+
+}
+
+.details_and_actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+
+.actionBtn {
+    background-color: #022c2c;
+    color: #f0ece7;
+    font-weight: 500;
+    padding: .5rem .8rem;
+    border-radius: .2rem;
+}
+
+.actionBtnDisabled {
+    background-color: #022c2c26;
+}

@@ -1,0 +1,50 @@
+.root {
+    width: 100%;
+    padding: 0;
+    margin: 1rem 0;
+    border: 1px solid #7a7979;
+    border-radius: .8rem;
+    display: flex;
+    cursor: pointer;
+}
+
+.root:hover {
+    border-color: #022c2c26;
+}
+
+.selected {
+    border: 2px solid #022c2c;
+}
+
+.selected:hover {
+    border: 2px solid #022c2c;
+}
+
+.pool_data {
+    width: 85%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 .5rem;
+}
+
+.id {
+    padding: 1rem .6rem;
+    background-color: #022c2c26;
+    border-top-left-radius: .8rem;
+    border-bottom-left-radius: .8rem;
+    font-weight: 600;
+    width: 15%;
+}
+
+.key, .value {
+    display: block;
+    font-size: .8rem;
+    color: #7a7979;
+}
+
+.value {
+    color: #000;
+    font-size: 1rem;
+    font-weight: 600;
+}

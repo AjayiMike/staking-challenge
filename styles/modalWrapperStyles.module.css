@@ -1,0 +1,21 @@
+.overlayClass {
+    backdrop-filter: blur(4px);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.content {
+    width: 24rem;
+    border-radius: 1rem;
+    border: 1px solid black;
+    padding: 1.5rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    outline: 0;
+    background-color: #FFF;
+}

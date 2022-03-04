@@ -1,0 +1,20 @@
+.root {
+    background: #022c2c26;
+    width: 7rem;
+    min-width: 7rem;
+    height: 4rem;
+    padding: .8rem;
+    border-radius: .4rem;
+}
+
+.key {
+    color: #7a7979;
+    font-size: .7rem;
+    display: block;
+}
+
+.value {
+    color: #022c2c;
+    font-size: .9rem;
+    font-weight: 500;
+}

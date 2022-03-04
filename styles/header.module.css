@@ -1,0 +1,27 @@
+.header {
+    background-color: #11101a;
+    border-bottom: 3px solid #008080;
+    padding: .5rem;
+}
+
+.textLogo {
+    color: #fff;
+    font-weight: 650;
+    font-size: 1.2rem;
+}
+
+.textLogoVariant {
+    color: #008080;
+    font-weight: 300;
+}
+.connected {
+    background-color: #008080;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+}
+
+.btnIcon {
+    margin-left: -.5rem;
+}

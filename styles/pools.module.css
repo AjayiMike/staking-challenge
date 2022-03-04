@@ -1,0 +1,18 @@
+.root {
+    width: 100%;
+    margin: 1rem 0;
+    max-height: 15rem;
+    overflow-y: scroll;
+}
+
+.emptyPools {
+    text-align: center;
+    font-weight: 500;
+    color: #7a7979;
+    font-size: 1rem;
+    margin: 3rem 0;
+}
+
+.poolsHeading {
+    font-size: 1.2rem;
+}

@@ -1,0 +1,24 @@
+.root {
+
+}
+
+.key, .value {
+    display: block;
+}
+
+.key {
+    color: #7a7979;
+    font-size: .8rem;
+    display: block;
+}
+
+.value {
+    color: #000;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.symbol {
+    color: #5f5e5e;
+    font-size: .7rem;
+}
