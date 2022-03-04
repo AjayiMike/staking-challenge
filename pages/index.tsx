@@ -52,6 +52,7 @@ const createPool = () => {
 }
 
 const approve = async () => {
+  if(!active) return toast.error("You need to connect your wallet!")
   if(selectedPool === null) return toast.error("You need to select a pool in which you wish to stake")
   try {
       const approveTx = await approveToken(addresses.lp_token, addresses.staking_pool, inputValue.toString());
@@ -72,6 +73,7 @@ const approve = async () => {
 }
 
 const stake = async () => {
+  if(!active) return toast.error("You need to connect your wallet!")
   if(selectedPool === null) return toast.error("You need to select a pool in which you wish to stake")
   try {
     const stakeTx = await stakeLpToken(selectedPool, inputValue.toString());
