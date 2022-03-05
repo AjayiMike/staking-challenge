@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
-
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+pragma solidity 0.8.10;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-contract staking {
-  using SafeMath for uint256;
+contract StakingPool {
     IERC20 private lpToken;
     IERC20 private creatorToken;
     uint256 public id;
@@ -13,7 +10,7 @@ contract staking {
       uint256 totalStakers;
       uint256 totalStaked;
       uint256 rewardReserve;
-      uint256 rewardRate; //daily
+      uint256 rewardRate; // daily for example
       mapping(address => uint256) stakersBalances;
       mapping(address => uint256) stakerRewardPerSec;
       mapping(address => uint256) stakerStoredReward;
@@ -27,8 +24,7 @@ contract staking {
       uint256 rewardRate;
     }
 
-    mapping(uint256 => Pool) public pools;
-    uint256[] internal poolIDs;
+    mapping(uint256 => Pool) internal pools;
     event poolCreated(uint256 PoolID, uint256 poolReward, uint256 at, address by);
     event Stake(uint256 poolID, address indexed account, uint256 indexed amount, uint256 at);
     event Unstake(uint256 poolID, address indexed account, uint256 indexed amount, uint256 at);
@@ -39,18 +35,14 @@ contract staking {
       creatorToken = IERC20(_creatorToken);
     }
 
-    function createPool(
-      uint256 _rewardRate
-    ) public {
+    function createPool(uint256 _rewardRate) public {
       // widthrawing the 100 pool reward token from the pool creator
       creatorToken.transferFrom(msg.sender, address(this), 100E18);
       Pool storage p = pools[id];
       p.rewardRate = _rewardRate;
       p.rewardReserve = 100E18;
-      // pushing the pools key into an array for retrieving all pools data later
-      poolIDs.push(id);
+      emit poolCreated(id, 100E18, block.timestamp, msg.sender);
       id++;
-      emit poolCreated(id - 1, 100E18, block.timestamp, msg.sender);
     }
 
     function getPoolByID(uint256 _id) external view returns(PoolDataReturnedType memory _pool) {
@@ -67,25 +59,29 @@ contract staking {
         uint256 previousReward = _getUserReward(_poolID, msg.sender);
         p.stakerStoredReward[msg.sender] = previousReward;
       }
-      // increment stakers if their previous balance is 0, it signifies new staker
-      userPreviousBalance == 0 ? p.totalStakers++ : p.totalStakers+0;
-      p.stakersBalances[msg.sender].add(_amount);
-      p.totalStaked.add(_amount);
+      // increment stakers if their previous balance is 0, it signifies new staker,
+      if(userPreviousBalance == 0) {
+          p.totalStakers++;
+      }
+
+      p.stakersBalances[msg.sender] += _amount;
+      p.totalStaked += _amount;
       p.stakerRewardPerSec[msg.sender] = _calculateRewardperSecond(_poolID,  p.stakersBalances[msg.sender]);
       p.stakerLastUpdatedTime[msg.sender] = block.timestamp;
       emit Stake(_poolID, msg.sender, _amount, block.timestamp);
     }
 
+
     function _calculateRewardperSecond(uint256 _poolID, uint256 _stakedAmount) private view returns(uint256 _rewardPerSecond) {
         uint256 secInDay = 1 days;
-        _rewardPerSecond = _stakedAmount.mul(pools[_poolID].rewardRate).div(secInDay);
+        _rewardPerSecond = (_stakedAmount * pools[_poolID].rewardRate) / secInDay;
     }
 
 
     function _getUserReward(uint256 _poolID, address _account) internal view returns(uint256 _userReward) {
         uint256 userRewardPerSec = pools[_poolID].stakerRewardPerSec[_account];
         uint256 timeElapsed = block.timestamp - pools[_poolID].stakerLastUpdatedTime[_account];
-        _userReward = userRewardPerSec.mul(timeElapsed).add(pools[_poolID].stakerStoredReward[_account]);
+        _userReward = (userRewardPerSec * timeElapsed) + pools[_poolID].stakerStoredReward[_account];
     }
 
     function getUserClaimableReward(uint256 _poolID, address _staker) external view returns(uint _reward) {
@@ -101,7 +97,8 @@ contract staking {
         p.stakersBalances[msg.sender] = 0;
         p.totalStakers--;
         p.stakerStoredReward[msg.sender] = 0;
-        p.totalStaked.sub(balance);
+        p.totalStaked -= balance;
+        p.rewardReserve -= reward;
         lpToken.transfer(msg.sender, balance);
         creatorToken.transfer(msg.sender, reward);
         emit Unstake(_poolID, msg.sender, balance, block.timestamp);
@@ -111,11 +108,20 @@ contract staking {
         Pool storage p = pools[_poolID];
         uint256 reward = _getUserReward(_poolID, msg.sender);
         require(reward > 0, "Staking pool contract: You do not have any reward to be claimed in this pool");
-        require((block.timestamp - p.stakerLastUpdatedTime[msg.sender]) > 1 days, "It is not up to a day since you last claimed in this pool");
         p.stakerLastUpdatedTime[msg.sender] = block.timestamp;
-        p.rewardReserve.sub(reward);
+        p.rewardReserve -= reward;
         p.stakerStoredReward[msg.sender] = 0;
-        creatorToken.transfer(msg.sender, reward);
+        require(creatorToken.transfer(msg.sender, reward));
         emit RewardClaim(_poolID, msg.sender, reward, block.timestamp);
     }
+
+
+    function getUserStakeBalance(uint256 _poolID, address _account) external view returns(uint256 _stake) {
+        _stake = pools[_poolID].stakersBalances[_account];
+    }
+
+    function getUserPoolRewardPerSec(uint256 _poolID, address _account) external view returns(uint256 _rewardPerSecond) {
+        _rewardPerSecond = pools[_poolID].stakerRewardPerSec[_account];
+    }
+
 }

@@ -53,10 +53,24 @@ const useContract = (active:boolean, library:any) => {
         return await stakingPoolInstance.stake(poolId, parseAmount);
     }
 
+    const createStakingPool = async (rewardRate: number) => {
+        // signer is needed here
+        const signer = library.getSigner();
+        const stakingPoolInstance = getStakingPoolInstance(addresses.staking_pool, signer);
+        return await stakingPoolInstance.createPool(2);
+    }
+
     
     
 
-      return {pools, approveToken, getTokenBalance, getTokenAllowance, stakeLpToken}; 
+      return {
+          pools,
+          approveToken,
+          getTokenBalance,
+          getTokenAllowance,
+          stakeLpToken,
+          createStakingPool
+        }; 
       
 }
 

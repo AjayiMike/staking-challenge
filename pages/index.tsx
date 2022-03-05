@@ -10,9 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Tab from '../components/tab'
 import Stake from '../components/stake'
 import Reward from '../components/reward'
-import { TabPropTypes } from '../utils/types'
 import { tabStates } from '../utils/constant'
-import { getTokenInstance, getStakingPoolInstance, getStakingPoolsData } from '../web3/contractUtils'
 import { addresses } from '../utils/constant'
 import { utils } from 'ethers'
 import useContract from '../web3/hooks/useContract'
@@ -29,11 +27,12 @@ const Home: NextPage = () => {
   const [lpTokenBalance, setLpTokenBalance] = useState<string>("")
   const [lpTokenAllowance, setLpTokenAllowance] = useState<string>("")
   const [selectedPool, setSelectedPool] = useState<number | null>(null)
-  const [stakeComponentState, setStateComponentState] = useState<string | null>(null)
+  const [stakeComponentState, setStakeComponentState] = useState<string | null>(null)
+  const [CreatePoolComponentState, setCreatePoolComponentState] = useState<string | null>(null)
   
 
   // useContract here
-  const {pools: stakingPools, approveToken, getTokenBalance, getTokenAllowance, stakeLpToken} = useContract(active, library);
+  const {pools: stakingPools, approveToken, getTokenBalance, getTokenAllowance, stakeLpToken, createStakingPool} = useContract(active, library);
  
 
   const inputChange = (e: any) => {
@@ -47,17 +46,13 @@ const selectPool = (id: number) => {
   setSelectedPool(id)
 }
 
-const createPool = () => {
 
-}
-
-const approve = async () => {
+const approveCreatePool = async () => {
   if(!active) return toast.error("You need to connect your wallet!")
-  if(selectedPool === null) return toast.error("You need to select a pool in which you wish to stake")
   try {
-      const approveTx = await approveToken(addresses.lp_token, addresses.staking_pool, inputValue.toString());
+      const approveTx = await approveToken(addresses.creator_token, addresses.staking_pool, "100");
       const approveTxHash = await library.getTransaction(approveTx.hash);
-      setStateComponentState("approving...")
+      setCreatePoolComponentState("approving...")
       await approveTxHash.wait();
       const approveTxReciept = await library.getTransactionReceipt(approveTxHash.hash)
       if(approveTxReciept && approveTxReciept.blockNumber) {
@@ -68,7 +63,51 @@ const approve = async () => {
   } catch(err) {
     toast.error("error occured, Approval unsuccessfull!");
   } finally {
-    setStateComponentState(null)
+    setCreatePoolComponentState(null)
+  }  
+}
+
+const createPool = async () => {
+  if(!active) return toast.error("You need to connect your wallet!")
+  try {
+    const createPool = await createStakingPool(2); // hardCoding the reward rate: 1:2
+    const createPoolHash = await library.getTransaction(createPool.hash);
+    setCreatePoolComponentState("creating pool...")
+    await createPoolHash.wait();
+    const createPoolReciept = await library.getTransactionReceipt(createPoolHash.hash)
+    if(createPoolReciept && createPoolReciept.blockNumber) {
+      toast.success("staking pool successfully created!");
+    } else {
+      
+      toast.error("error occured, could not create pool");
+    }
+  } catch(err) {
+    toast.error("error occured, could not create pool");
+  } finally {
+    setCreatePoolComponentState(null)
+  }
+}
+
+
+
+const approveStake = async () => {
+  if(!active) return toast.error("You need to connect your wallet!")
+  if(selectedPool === null) return toast.error("You need to select a pool in which you wish to stake")
+  try {
+      const approveTx = await approveToken(addresses.lp_token, addresses.staking_pool, inputValue.toString());
+      const approveTxHash = await library.getTransaction(approveTx.hash);
+      setStakeComponentState("approving...")
+      await approveTxHash.wait();
+      const approveTxReciept = await library.getTransactionReceipt(approveTxHash.hash)
+      if(approveTxReciept && approveTxReciept.blockNumber) {
+        toast.success("token approval successfull!");
+      } else {
+        toast.error("error occured, could not approve token!");
+    }
+  } catch(err) {
+    toast.error("error occured, Approval unsuccessfull!");
+  } finally {
+    setStakeComponentState(null)
   }  
 }
 
@@ -78,7 +117,7 @@ const stake = async () => {
   try {
     const stakeTx = await stakeLpToken(selectedPool, inputValue.toString());
     const stakeTxHash = await library.getTransaction(stakeTx.hash);
-    setStateComponentState("staking...")
+    setStakeComponentState("staking...")
     await stakeTxHash.wait();
     const stakeTxReciept = await library.getTransactionReceipt(stakeTxHash.hash)
     if(stakeTxReciept && stakeTxReciept.blockNumber) {
@@ -90,7 +129,7 @@ const stake = async () => {
   } catch(err) {
     toast.error("error occured, could not stake LP token");
   } finally {
-    setStateComponentState(null)
+    setStakeComponentState(null)
   }
   
 }
@@ -164,7 +203,7 @@ const stake = async () => {
             selected = {selectedPool}
             select = {selectPool}
             stake = {stake}
-            approve = {approve}
+            approve = {approveStake}
             state = {stakeComponentState}
           /> }
           {currentTab === tabStates.reward && <Reward />}
@@ -172,8 +211,10 @@ const stake = async () => {
           {currentTab === tabStates.create_pool &&
           <CreatePool
             createPool = {createPool}
-            creatorTokenAllowance = {creatorTokenAllowance}
-            value = {100}
+            creatorTokenAllowance = {parseFloat(creatorTokenAllowance)}
+            value = {100} // hardCoded since the requirement document explicitly specified 100 $CREATOR
+            state = {CreatePoolComponentState}
+            approve = {approveCreatePool}
           />}
           
       </Box>

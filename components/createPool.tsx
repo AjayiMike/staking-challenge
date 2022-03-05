@@ -2,7 +2,16 @@ import clsx from 'clsx';
 import { Box, Input } from 'degen'
 import styles from '../styles/createPool.module.css';
 
-const CreatePool = ({createPool, creatorTokenAllowance, value}: any) => {
+type createPoolPropTypes = {
+    createPool: () => void,
+    approve: () => void
+    creatorTokenAllowance: number,
+    value: number,
+    state: string | null,
+
+}
+
+const CreatePool = ({createPool, approve, creatorTokenAllowance, value, state}: createPoolPropTypes) => {
   return (
     <Box className = {styles.root}>
         <Box as = "h3" className = {styles.heading}>Create reward pool</Box>
@@ -13,7 +22,7 @@ const CreatePool = ({createPool, creatorTokenAllowance, value}: any) => {
             placeholder="100"
             type="number"
             units="Creator"
-            value={100}
+            value={value}
             disabled = {true}
         />
         <Input
@@ -26,10 +35,10 @@ const CreatePool = ({createPool, creatorTokenAllowance, value}: any) => {
         <Box
             as = "button"
             width="full"
-            onClick={createPool}
+            onClick = {value <= creatorTokenAllowance ? createPool : approve}
             className = {clsx({[styles.createBtn]: true, [styles.approvedClass]: value <= creatorTokenAllowance})}
         >   
-            {value <= creatorTokenAllowance ? "Stake" : "Approve"}
+            {state === null ? value <= creatorTokenAllowance ? "Create Pool" : "Approve" : state}
         </Box>
     </Box>
   )
