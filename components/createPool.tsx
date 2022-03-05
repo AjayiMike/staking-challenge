@@ -37,6 +37,7 @@ const CreatePool = ({createPool, approve, creatorTokenAllowance, value, state}: 
             width="full"
             onClick = {value <= creatorTokenAllowance ? createPool : approve}
             className = {clsx({[styles.createBtn]: true, [styles.approvedClass]: value <= creatorTokenAllowance})}
+            disabled = {state !== null}
         >   
             {state === null ? value <= creatorTokenAllowance ? "Create Pool" : "Approve" : state}
         </Box>

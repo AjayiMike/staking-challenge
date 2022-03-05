@@ -1,5 +1,5 @@
 import { utils } from 'ethers'
-import {useState, useEffect, useCallback} from 'react'
+import {useState, useEffect} from 'react'
 import { addresses } from '../../utils/constant'
 import { getTokenInstance, getStakingPoolInstance, getStakingPoolsData } from '../contractUtils'
 
