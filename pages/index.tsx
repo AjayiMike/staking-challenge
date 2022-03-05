@@ -65,6 +65,7 @@ const approveCreatePool = async () => {
   } finally {
     setCreatePoolComponentState(null)
   }  
+  await setConnectedUserData()
 }
 
 const createPool = async () => {
@@ -86,6 +87,7 @@ const createPool = async () => {
   } finally {
     setCreatePoolComponentState(null)
   }
+  await setConnectedUserData()
 }
 
 
@@ -109,6 +111,8 @@ const approveStake = async () => {
   } finally {
     setStakeComponentState(null)
   }  
+
+  await setConnectedUserData()
 }
 
 const stake = async () => {
@@ -131,6 +135,7 @@ const stake = async () => {
   } finally {
     setStakeComponentState(null)
   }
+  await setConnectedUserData()
   
 }
 
