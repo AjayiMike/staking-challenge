@@ -56,3 +56,30 @@
     padding: .5rem .8rem;
     border-radius: .2rem;
 }
+.actionBtn:first-of-type {
+    margin-right: .5rem;
+}
+
+@media only screen and (max-width: 800px) {
+    .pool_data {
+        flex: 1 1 1;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .pool_data {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        padding-bottom: .5rem;
+    }
+    .pool_data_item {
+        margin-right: 1rem;
+    }
+    .btnGroup {
+        width: 100%;
+        white-space: nowrap;
+    }
+    .pool_data_item:nth-child(2) {
+        display: none;
+    }
+}

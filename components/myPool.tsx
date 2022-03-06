@@ -32,13 +32,14 @@ const MyPool = ({pool, state, unstake, claim}: myPoolPropTypes) => {
           <Box as = "span" className = {styles.value}>{parseFloat(pool.claimableReward).toFixed(3)}</Box>
         </Box>
 
-                
-        <Box as = "button" className = {styles.actionBtn} onClick = {() => unstake(pool.id)}>
-            Unstake
-        </Box>
-        <Box as = "button" className = {styles.actionBtn} onClick = {() => claim(pool.id)}>
-            Claim
-        </Box>
+        <Box className = {styles.btnGroup}>
+          <Box as = "button" className = {styles.actionBtn} onClick = {() => unstake(pool.id)}>
+              Unstake
+          </Box>
+          <Box as = "button" className = {styles.actionBtn} onClick = {() => claim(pool.id)}>
+              Claim
+          </Box>
+        </Box>     
       </Box>
     </Box>
   )
