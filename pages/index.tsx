@@ -29,10 +29,19 @@ const Home: NextPage = () => {
   const [selectedPool, setSelectedPool] = useState<number | null>(null)
   const [stakeComponentState, setStakeComponentState] = useState<string | null>(null)
   const [CreatePoolComponentState, setCreatePoolComponentState] = useState<string | null>(null)
+  const [userPools, setUserPools] = useState<any>([]);
   
 
   // useContract here
-  const {pools: stakingPools, approveToken, getTokenBalance, getTokenAllowance, stakeLpToken, createStakingPool} = useContract(active, library);
+  const {
+    pools: stakingPools,
+    approveToken,
+    getTokenBalance,
+    getTokenAllowance,
+    stakeLpToken,
+    createStakingPool,
+    fetchUserPools
+  } = useContract(active, library);
  
 
   const inputChange = (e: any) => {
@@ -158,10 +167,12 @@ const stake = async () => {
     const lpTokenBal = await getTokenBalance(addresses.lp_token, account as string);
     const creatorTokenAllowance = await getTokenAllowance(addresses.creator_token, account as string, addresses.staking_pool);
     const lpTokenAallowance = await getTokenAllowance(addresses.lp_token, account as string, addresses.staking_pool);
+    const pools = await fetchUserPools(account as string);
     setCreatorTokenBalance(utils.formatEther(creatorTokenBal))
     setCreatorTokenAllowance(utils.formatEther(creatorTokenAllowance))
     setLpTokenBalance(utils.formatEther(lpTokenBal))
     setLpTokenAllowance(utils.formatEther(lpTokenAallowance))
+    setUserPools(pools)
   }
 
   
@@ -211,7 +222,10 @@ const stake = async () => {
             approve = {approveStake}
             state = {stakeComponentState}
           /> }
-          {currentTab === tabStates.reward && <Reward />}
+          {currentTab === tabStates.reward &&
+          <Reward
+            pools = {userPools}
+          />}
 
           {currentTab === tabStates.create_pool &&
           <CreatePool

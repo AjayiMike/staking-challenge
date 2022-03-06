@@ -2,8 +2,25 @@ import { Box, Stack } from 'degen'
 import styles from '../styles/reward.module.css'
 import Detail from './detail'
 import StatCard from './statCard'
+import MyPool from './myPool'
+import Pools from './pools'
+import { useEffect, useState } from 'react'
 
-const Reward = () => {
+const Reward = ({pools}: any) => {
+    const [totalStaked, setTotalStaked] = useState<string | number>(0)
+    const [totalReward, setTotalRewards] = useState<string | number>(0)
+
+    useEffect(() => {
+        let total:number = 0, rewards:number = 0;
+        pools.forEach((pool: any) => {
+            total += parseFloat(pool.stakeAmount);
+            rewards += parseFloat(pool.claimableReward);
+        })
+        setTotalStaked(total);
+        setTotalRewards(rewards.toFixed(3));
+    
+    }, [JSON.stringify(pools)])
+    
   return (
     <Box
         as = "div"
@@ -15,30 +32,22 @@ const Reward = () => {
         >
             Reward on staked CREATOR/UNI LP token
         </Box>
-        {/* stats */}
-        {/* status */}
-        {/* total pool reward */}
-        {/* total staked */}
-        {/* reward rate */}
-        {/* pending rewards */}
-        {/* claim */}
-        {/* unstake */}
         <Box 
             className = {styles.statsContainer}
         >
             <StatCard
-                keyName = "Pool status"
-                value="Active"
+                keyName = "My pools"
+                value= {pools.length}
             />
 
             <StatCard
-                keyName = "Total pool reward"
-                value="100 $Creator"
+                keyName = "Pending rewards"
+                value={`${totalReward} CREATOR`}
             />
 
             <StatCard
                 keyName = "Total staked"
-                value="6,843"
+                value={totalStaked}
             />
 
             <StatCard
@@ -51,31 +60,7 @@ const Reward = () => {
         <Box
             className = {styles.details_and_actions_root}
         >
-            <Box as = "h3" className = {styles.heading}>My Data</Box>
-
-            <Box
-                className = {styles.details_and_actions}
-            >
-                <Detail keyName='total staked' value = "20" />
-                <Box
-                    as = "button"
-                    className = {styles.actionBtn}
-                >
-                    Unstake
-                </Box>
-            </Box>
-
-            <Box
-                className = {styles.details_and_actions}
-            >
-                <Detail keyName='Withdrawable reward' value = "40" />
-                <Box
-                    as = "button"
-                    className = {styles.actionBtn}
-                >
-                    Claim
-                </Box>
-            </Box>
+            {pools.length > 0 && pools.map((pool: any, index: number) => <MyPool key = {index} pool = {pool} />)}
         </Box>
     </Box>
   )

@@ -1,11 +1,12 @@
 import { utils } from 'ethers'
 import {useState, useEffect} from 'react'
 import { addresses } from '../../utils/constant'
-import { getTokenInstance, getStakingPoolInstance, getStakingPoolsData } from '../contractUtils'
+import { getTokenInstance, getStakingPoolInstance, getStakingPoolsData, getUserOwnedPoolsData } from '../contractUtils'
 
 const useContract = (active:boolean, library:any) => {
     let creator_token_instance: any, lp_token_instance:any, staking_pool_instance:any
     const [pools, setPools] = useState<any>([])
+
 
     // this is only needed for  getting pools regardless of whether or not there is a signer
     useEffect(() => {
@@ -17,6 +18,13 @@ const useContract = (active:boolean, library:any) => {
     const fetchPoolsData = async() => {
         const pools = await getStakingPoolsData(staking_pool_instance);
         setPools(pools)
+    }
+
+    const fetchUserPools = async (account: string) => {
+        const signer = library.getSigner();
+        staking_pool_instance = getStakingPoolInstance(addresses.staking_pool, signer);
+        const pools = await getUserOwnedPoolsData(staking_pool_instance, account);
+        return pools;
     }
 
     useEffect(() => {
@@ -69,7 +77,8 @@ const useContract = (active:boolean, library:any) => {
           getTokenBalance,
           getTokenAllowance,
           stakeLpToken,
-          createStakingPool
+          createStakingPool,
+          fetchUserPools
         }; 
       
 }

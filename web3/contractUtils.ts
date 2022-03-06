@@ -33,11 +33,31 @@ export const getStakingPoolsData = async (poolInstance: any) => {
       poolsHolder.push({
         id: i,
         totalStakers: pool[0].toString(),
-        totalStaked: pool[1].toString(),
+        totalStaked: utils.formatEther(pool[1].toString()),
         rewardReserve: utils.formatEther(pool[2].toString()),
         rewardRate: pool[3].toString()
       });
     }
 
+    return poolsHolder;
+}
+
+export const getUserOwnedPoolsData = async (poolInstance: any, account: string) => {
+    const poolsCount = await poolInstance.id();
+    const poolsHolder = [];
+    for(let i = 0; i < poolsCount; i++) {
+      const userStakeBalance = await poolInstance.getUserStakeBalance(i, account);
+      if(parseFloat(utils.formatEther(userStakeBalance)) > 0) {
+        const pool = await poolInstance.getPoolByID(i);
+        const userClaimableReward = await poolInstance.getUserClaimableReward(i, account);
+        poolsHolder.push({
+            id: i,
+            rewardRate: pool[3].toString(),
+            stakeAmount: utils.formatEther(userStakeBalance),
+            claimableReward: utils.formatEther(userClaimableReward)
+          });
+      }
+    
+    }
     return poolsHolder;
 }

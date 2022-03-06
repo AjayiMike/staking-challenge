@@ -9,12 +9,12 @@
 
 .key {
     color: #7a7979;
-    font-size: .7rem;
+    font-size: .5rem;
     display: block;
 }
 
 .value {
     color: #022c2c;
-    font-size: .9rem;
+    font-size: .7rem;
     font-weight: 500;
 }

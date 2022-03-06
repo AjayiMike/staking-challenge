@@ -32,23 +32,3 @@
 .heading {
 
 }
-
-.details_and_actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-
-.actionBtn {
-    background-color: #022c2c;
-    color: #f0ece7;
-    font-weight: 500;
-    padding: .5rem .8rem;
-    border-radius: .2rem;
-}
-
-.actionBtnDisabled {
-    background-color: #022c2c26;
-}
