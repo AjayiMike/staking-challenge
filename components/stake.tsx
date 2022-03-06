@@ -35,9 +35,9 @@ const Stake = ({pools, tokenBalance, value, inputErrMsg, handleChange, state, to
             <Input
                 label="Reward rate: 1:2"
                 error = {inputErrMsg}
-                labelSecondary={<Tag>Bal: {tokenBalance.toFixed(2)} LP</Tag>}
+                labelSecondary={<Tag>Bal: {tokenBalance ? tokenBalance.toFixed(2) : 0 } LP</Tag>}
                 inputMode = "decimal"
-                max={tokenBalance | 0}
+                max={tokenBalance | 1}
                 min={0}
                 placeholder="10"
                 type="number"

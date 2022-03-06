@@ -61,8 +61,12 @@
 }
 
 @media only screen and (max-width: 800px) {
-    .pool_data {
-        flex: 1 1 1;
+    .actionBtn {
+        font-weight: 400;
+        padding: .3rem .5rem;
+        border-radius: .1rem;
+        font-size: .8rem;
+        display: inline;
     }
 }
 
@@ -81,5 +85,12 @@
     }
     .pool_data_item:nth-child(2) {
         display: none;
+    }
+
+    .actionBtn {
+        font-weight: 400;
+        padding: .3rem .5rem;
+        border-radius: .1rem;
+        font-size: .8rem;
     }
 }
