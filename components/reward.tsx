@@ -6,7 +6,14 @@ import MyPool from './myPool'
 import Pools from './pools'
 import { useEffect, useState } from 'react'
 
-const Reward = ({pools}: any) => {
+type rewardPropTypes = {
+    pools: any[],
+    state: string | null
+    unstake: (id:number) => void,
+    claim: (id:number) => void
+}
+
+const Reward = ({pools, unstake, claim, state}: rewardPropTypes) => {
     const [totalStaked, setTotalStaked] = useState<string | number>(0)
     const [totalReward, setTotalRewards] = useState<string | number>(0)
 
@@ -60,7 +67,12 @@ const Reward = ({pools}: any) => {
         <Box
             className = {styles.details_and_actions_root}
         >
-            {pools.length > 0 && pools.map((pool: any, index: number) => <MyPool key = {index} pool = {pool} />)}
+            {pools.length > 0 ?
+            pools.map((pool: any, index: number) => <MyPool key = {index} pool = {pool} unstake = {unstake} claim = {claim} state = {state} />) :
+            <Box as = "p" className = {styles.emptyPools}>
+                You do not belong to any pool yet!
+            </Box>
+            }
         </Box>
     </Box>
   )

@@ -2,12 +2,15 @@ import clsx from "clsx"
 import { Box } from "degen"
 import styles from '../styles/myPool.module.css'
 
-
-const MyPool = ({pool, selected, select}: any) => {
+type myPoolPropTypes = {
+  pool: any,
+  state: string | null,
+  unstake: (id:number) => void,
+  claim: (id: number) => void
+}
+const MyPool = ({pool, state, unstake, claim}: myPoolPropTypes) => {
   return (
-    <Box className = {clsx({[styles.root]: true, [styles.selected]: selected === pool.id})}
-      onClick = {() => select(pool.id)}
-    >
+    <Box className = {styles.root}>
       <Box className = {styles.id}>
         <Box as = "span">
           ID: {pool.id}
@@ -30,12 +33,12 @@ const MyPool = ({pool, selected, select}: any) => {
         </Box>
 
                 
-          <Box as = "button" className = {styles.actionBtn}>
-              Unstake
-          </Box>
-          <Box as = "button" className = {styles.actionBtn} >
-              Claim
-          </Box>
+        <Box as = "button" className = {styles.actionBtn} onClick = {() => unstake(pool.id)}>
+            Unstake
+        </Box>
+        <Box as = "button" className = {styles.actionBtn} onClick = {() => claim(pool.id)}>
+            Claim
+        </Box>
       </Box>
     </Box>
   )

@@ -65,7 +65,21 @@ const useContract = (active:boolean, library:any) => {
         // signer is needed here
         const signer = library.getSigner();
         const stakingPoolInstance = getStakingPoolInstance(addresses.staking_pool, signer);
-        return await stakingPoolInstance.createPool(2);
+        return await stakingPoolInstance.createPool(rewardRate);
+    }
+
+    const claimReward = async (poolId: number) => {
+        // signer is needed here
+        const signer = library.getSigner();
+        const stakingPoolInstance = getStakingPoolInstance(addresses.staking_pool, signer);
+        return await stakingPoolInstance.claimReward(poolId);
+    }
+
+    const unstake = async (poolId: number) => {
+        // signer is needed here
+        const signer = library.getSigner();
+        const stakingPoolInstance = getStakingPoolInstance(addresses.staking_pool, signer);
+        return await stakingPoolInstance.unstake(poolId);
     }
 
     
@@ -78,7 +92,9 @@ const useContract = (active:boolean, library:any) => {
           getTokenAllowance,
           stakeLpToken,
           createStakingPool,
-          fetchUserPools
+          fetchUserPools,
+          claimReward,
+          unstake
         }; 
       
 }

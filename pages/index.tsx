@@ -29,6 +29,7 @@ const Home: NextPage = () => {
   const [selectedPool, setSelectedPool] = useState<number | null>(null)
   const [stakeComponentState, setStakeComponentState] = useState<string | null>(null)
   const [CreatePoolComponentState, setCreatePoolComponentState] = useState<string | null>(null)
+  const [rewardComponentState, setRewardComponentState] = useState<string | null>(null)
   const [userPools, setUserPools] = useState<any>([]);
   
 
@@ -40,7 +41,9 @@ const Home: NextPage = () => {
     getTokenAllowance,
     stakeLpToken,
     createStakingPool,
-    fetchUserPools
+    fetchUserPools,
+    unstake,
+    claimReward
   } = useContract(active, library);
  
 
@@ -148,6 +151,48 @@ const stake = async () => {
   
 }
 
+const claimHandler = async (poolId: number) => {
+  if(!active) return toast.error("You need to connect your wallet!")
+  try {
+    const claimTx = await claimReward(poolId);
+    const claimTxHash = await library.getTransaction(claimTx.hash);
+    setRewardComponentState("claiming...")
+    await claimTxHash.wait();
+    const claimTxReciept = await library.getTransactionReceipt(claimTxHash.hash)
+    if(claimTxReciept && claimTxReciept.blockNumber) {
+      toast.success(`reward claimed successfully from pool ${poolId}`);
+    } else {
+      toast.error("error occured, could not claim reward");
+    }
+  } catch(err) {
+    toast.error("error occured, could not claim reward");
+  } finally {
+    setRewardComponentState(null)
+  }
+  await setConnectedUserData()
+}
+
+
+const unstakeHandler = async (poolId: number) => {
+  if(!active) return toast.error("You need to connect your wallet!")
+  try {
+    const unstakeTx = await unstake(poolId);
+    const unstakeTxHash = await library.getTransaction(unstakeTx.hash);
+    setRewardComponentState("unstaking...")
+    await unstakeTxHash.wait();
+    const unstakeTxReciept = await library.getTransactionReceipt(unstakeTxHash.hash)
+    if(unstakeTxReciept && unstakeTxReciept.blockNumber) {
+      toast.success(`successfully unstaked from pool ${poolId}`);
+    } else {
+      toast.error("error occured, could not unstake");
+    }
+  } catch(err) {
+    toast.error("error occured, could not unstake");
+  } finally {
+    setRewardComponentState(null)
+  }
+  await setConnectedUserData()
+}
 
 
   useEffect(() => {
@@ -225,6 +270,9 @@ const stake = async () => {
           {currentTab === tabStates.reward &&
           <Reward
             pools = {userPools}
+            state = {rewardComponentState}
+            claim = {claimHandler}
+            unstake = {unstakeHandler}
           />}
 
           {currentTab === tabStates.create_pool &&
