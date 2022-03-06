@@ -21,7 +21,7 @@ const Pool = ({pool, selected, select}: any) => {
 
         <Box as = "div" className = {styles.pool_data_item}>
           <Box as = "span" className = {styles.key}>Rewerd reserve</Box>
-          <Box as = "span" className = {styles.value}>{pool.rewardReserve}</Box>
+          <Box as = "span" className = {styles.value}>{parseFloat(pool.rewardReserve).toFixed(4)}</Box>
         </Box>
 
         <Box as = "div" className = {styles.pool_data_item}>
